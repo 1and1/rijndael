@@ -12,8 +12,8 @@ parser = OptionParser.new do |opts|
   opts.banner = <<HELP
 Usage:
     #{$PROGRAM_NAME} -k
-    #{$PROGRAM_NAME} -k key [-e 'plain' | -d 'cipher']...
     #{$PROGRAM_NAME} (-e 'plain' | -d 'cipher')...
+    #{$PROGRAM_NAME} -k key [-e 'plain' | -d 'cipher']...
 HELP
   opts.separator 'Options:'
   opts.on('-k', '--key [KEY]', 'Generate or use key') do |key|

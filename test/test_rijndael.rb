@@ -3,17 +3,17 @@ require_relative 'test_helper'
 # Test Crypt functionality
 class TestCrypt < Minitest::Test
   def setup
-    @crypt = Rijndael.new('7xnfakb9k1xKWsoUWUtXhGR9qsG+tkdOXdvKGbRkXGY=')
+    @crypt = Rijndael::Base.new('7xnfakb9k1xKWsoUWUtXhGR9qsG+tkdOXdvKGbRkXGY=')
   end
 
   def test_loading_empty_key_should_fail
     ex = assert_raises ArgumentError do
-      Rijndael.new(nil)
+      Rijndael::Base.new(nil)
     end
     assert_equal 'Key is empty.', ex.message
 
     ex = assert_raises ArgumentError do
-      Rijndael.new('')
+      Rijndael::Base.new('')
     end
     assert_equal 'Key is empty.', ex.message
   end

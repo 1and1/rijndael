@@ -38,11 +38,11 @@ if !options.key?(:key) && options[:crypt].empty?
 end
 
 if options[:key].nil?
-  options[:key] = Rijndael.generate_key
+  options[:key] = Rijndael::Base.generate_key
   puts "Generated key: #{options[:key]}"
 end
 
-rijndael = Rijndael.new(options[:key])
+rijndael = Rijndael::Base.new(options[:key])
 
 options[:crypt].each do |crypt|
   puts rijndael.send(crypt[:action], crypt[:value])

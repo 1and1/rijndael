@@ -1,0 +1,49 @@
+#!/usr/bin/env ruby
+
+require 'rijndael'
+require 'yaml'
+require 'optparse'
+
+options = {
+  crypt: []
+}
+
+parser = OptionParser.new do |opts|
+  opts.banner = <<HELP
+Usage:
+    #{$PROGRAM_NAME} -k
+    #{$PROGRAM_NAME} -k key [-e 'plain' | -d 'cipher']...
+    #{$PROGRAM_NAME} (-e 'plain' | -d 'cipher')...
+HELP
+  opts.separator 'Options:'
+  opts.on('-k', '--key [KEY]', 'Generate or use key') do |key|
+    options[:key] = key
+  end
+  opts.on('-e', '--encrypt PLAIN', 'Encrypt plain text') do |plain|
+    options[:crypt] << { action: :encrypt, value: plain }
+  end
+  opts.on('-d', '--decrypt CIPHER', 'Decrypt cipher text') do |cipher|
+    options[:crypt] << { action: :decrypt, value: cipher }
+  end
+  opts.on_tail('-h', '--help', 'Print this help') do
+    puts opts
+    exit
+  end
+end
+parser.parse!
+
+if !options.key?(:key) && options[:crypt].empty?
+  puts parser
+  exit
+end
+
+if options[:key].nil?
+  options[:key] = Rijndael.generate_key
+  puts "Generated key: #{options[:key]}"
+end
+
+rijndael = Rijndael.new(options[:key])
+
+options[:crypt].each do |crypt|
+  puts rijndael.send(crypt[:action], crypt[:value])
+end

@@ -3,16 +3,20 @@ require 'base64'
 require 'yaml'
 require 'rijndael/deep_decrypt'
 
+#:nodoc:
 module Rijndael
   CIPHER_PATTERN = %r(^\$([a-zA-Z0-9+/]+={0,2})\$([a-zA-Z0-9+/]+={0,2})$)
 
+  ##
+  # Simply encrypt and decrypt strings using Rijndael.
+  #
   class Base
     include DeepDecrypt
 
     ##
-    # This constructor sets the de-/encryption key and initialisation vector(iv).
+    # This constructor sets the de-/encryption key.
     #
-    # @param crypt_file [String] Path to crypt_file that contains encrypted passwords.
+    # @param key [String] Encryption key.
     #
     def initialize(key)
       @key = key
@@ -22,9 +26,9 @@ module Rijndael
     ##
     # This method expects a plain text of arbitrary length and encrypts it.
     #
-    # @param plain [String] Plain text to encrypt.
+    # @param plain [String] Plain text.
     #
-    # @return [String] Base64 encoded cipher text.
+    # @return [String] Cipher text.
     #
     def encrypt(plain)
       fail ArgumentError, 'No plain text supplied.' if plain.nil? || plain.empty?
@@ -45,9 +49,9 @@ module Rijndael
     ##
     # This method expects a base64 encoded cipher text and decrypts it.
     #
-    # @param encrypted [String] Cipher text to decrypt.
+    # @param encrypted [String] Cipher text.
     #
-    # @return [String] Decrypted plain text.
+    # @return [String] Plain text.
     #
     def decrypt(encrypted)
       fail ArgumentError, 'No cipher text supplied.' if encrypted.nil? || encrypted.empty?
@@ -65,6 +69,11 @@ module Rijndael
       decrypted << cipher.final
     end
 
+    ##
+    # Generate a random key for encryption.
+    #
+    # @return [String] Encryption key.
+    #
     def self.generate_key
       Base64.strict_encode64(cipher.random_key)
     end
